@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelime Bilgisi Oyunu</title>
+    <style>
+        /* Genel Gövde Stili */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FF6347, #FFD700); /* Canlı renk geçişi */
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Başlık */
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            letter-spacing: 2px;
+        }
+
+        /* Skor ve Zaman */
+        #skor, #timer {
+            font-size: 1.5em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        #skor:hover, #timer:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        /* Kullanıcı Adı Alanı */
+        #kullanici-adi {
+            font-size: 1.8em;
+            margin: 10px 0;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Kullanıcı Adı Girişi */
+        #kullanici-adi-input {
+            font-size: 1.2em;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 10px;
+            width: 300px;
+            border: none;
+            outline: none;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Onaylama Butonu */
+        #onayla-btn {
+            font-size: 1.2em;
+            padding: 12px 25px;
+            margin: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        #onayla-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Kelime ve Anlam Kutusu */
+        #kelime-anlam {
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            max-width: 80%;
+            width: 450px;
+            transition: background-color 0.3s;
+        }
+
+        /* Seçenek Butonları */
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .option {
+            font-size: 1.2em;
+            padding: 20px;
+            width: 100%;
+            max-width: 45%;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #ff6347; /* Kırmızımsı turuncu */
+            color: #fff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            transform: scale(1.05);
+            background-color: #FFD700; /* Altın sarısı */
+            color: #fff;
+            box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Sonuç Mesajı */
+        #sonuc {
+            font-size: 1.5em;
+            margin-top: 20px;
+            padding: 15px 30px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .incorrect {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff4e4e;
+        }
+
+        .correct {
+            background-color: rgba(0, 255, 0, 0.2);
+            color: #28a745;
+        }
+
+        /* Tekrar Oyna Butonu */
+        button {
+            margin-top: 30px;
+            padding: 14px 30px;
+            font-size: 1.2em;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #FFD700;
+            transform: scale(1.05);
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            #skor, #timer, #kelime-anlam, .option {
+                font-size: 1.1em;
+            }
+
+            .options {
+                gap: 10px;
+            }
+
+            #kullanici-adi-input {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kelime Bilgisi Oyunu</h1>
+    
+    <!-- Kullanıcı Adı Girişi -->
+    <input id="kullanici-adi-input" type="text" placeholder="Adınızı girin" oninput="updateUserName()">
+
+    <button id="onayla-btn" onclick="onayla()">Adı Onayla</button>
+
+    <div id="kullanici-adi"></div>
+    <div id="skor">Skor: 0</div>
+    <div id="timer">Süre: 190</div>
+    <div id="kelime-anlam"></div>
+    <div class="options">
+        <div class="option" id="option1" onclick="checkAnswer(this)"></div>
+        <div class="option" id="option2" onclick="checkAnswer(this)"></div>
+        <div class="option" id="option3" onclick="checkAnswer(this)"></div>
+        <div class="option" id="option4" onclick="checkAnswer(this)"></div>
+    </div>
+    <div id="sonuc" class="hidden"></div>
+    <button onclick="oyunaBasla()">Tekrar Oyna</button>
+
+    <script>
+        const kelimeBankasi = [
+            { "kelime": "debit", "anlam": "Banka hesabından yapılan para çıkış işlemi." },
+            { "kelime": "limit", "anlam": "Hesap veya kredi kartında kullanılabilecek en yüksek miktar." },
+            { "kelime": "enflasyon", "anlam": "Genel fiyat seviyesindeki sürekli artış oranı." },
+            { "kelime": "vadesiz hesap", "anlam": "Para yatırıp çekilebilen, faiz getirisi olmayan banka hesabı türü." },
+            { "kelime": "vadeli hesap", "anlam": "Belirli bir süre sonunda faiz getirisi elde edilen banka hesabı türü." },
+            { "kelime": "faiz", "anlam": "Bir borcun ya da yatırılan paranın üzerine eklenen ek ücret." },
+            { "kelime": "kredi", "anlam": "Bir bankadan ya da finansal bir kuruluştan alınan borç." },
+            { "kelime": "banka kartı", "anlam": "Banka hesabına bağlı, para çekme ve ödeme yapma aracı." }
+        ];
+
+        let kullaniciAdi = "";
+        let skor = 0;
+        let zaman = 190; 
+        let seciliKelime = {};
+
+        // Kullanıcı adı güncelleme
+        function updateUserName() {
+            kullaniciAdi = document.getElementById("kullanici-adi-input").value;
+        }
+
+        // Kullanıcı adını onaylama
+        function onayla() {
+            if (kullaniciAdi) {
+                document.getElementById("kullanici-adi").textContent = "Merhaba, " + kullaniciAdi + "!";
+                document.getElementById("kullanici-adi-input").style.display = "none";
+                document.getElementById("onayla-btn").style.display = "none";
+                oyunaBasla();
+            } else {
+                alert("Lütfen adınızı girin!");
+            }
+        }
+
+        // Oyunu başlatma
+        function oyunaBasla() {
+            skor = 0;
+            zaman = 190;
+            document.getElementById("skor").textContent = "Skor: " + skor;
+            document.getElementById("timer").textContent = "Süre: " + zaman;
+            document.getElementById("sonuc").classList.add("hidden");
+            yeniKelime();
+            baslatZamanlayici();
+        }
+
+        // Zamanlayıcı fonksiyonu
+        function baslatZamanlayici() {
+            const timer = setInterval(() => {
+                if (zaman > 0) {
+                    zaman--;
+                    document.getElementById("timer").textContent = "Süre: " + zaman;
+                } else {
+                    clearInterval(timer);
+                    oyunBitti();
+                }
+            }, 1000);
+        }
+
+        // Yeni kelimeyi yükleme
+        function yeniKelime() {
+            seciliKelime = kelimeBankasi[Math.floor(Math.random() * kelimeBankasi.length)];
+            document.getElementById("kelime-anlam").textContent = seciliKelime.anlam;
+            dogruCevabiYerlestir();
+        }
+
+        // Doğru cevabı ve yanlış seçenekleri yerleştirme
+        function dogruCevabiYerlestir() {
+            let secenekler = kelimeBankasi.map(item => item.kelime);
+            secenekler = secenekler.filter(kelime => kelime !== seciliKelime.kelime);
+            secenekler = secenekler.sort(() => Math.random() - 0.5).slice(0, 3);
+            secenekler.push(seciliKelime.kelime);
+            secenekler = secenekler.sort(() => Math.random() - 0.5);
+
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById("option" + i).textContent = secenekler[i - 1];
+            }
+        }
+
+        // Cevabı kontrol etme
+        function checkAnswer(optionElement) {
+            if (optionElement.textContent === seciliKelime.kelime) {
+                skor += 10;
+                document.getElementById("skor").textContent = "Skor: " + skor;
+                document.getElementById("sonuc").textContent = "Doğru!";
+                document.getElementById("sonuc").classList.remove("hidden", "incorrect");
+                document.getElementById("sonuc").classList.add("correct");
+            } else {
+                document.getElementById("sonuc").textContent = "Yanlış! Doğru cevap: " + seciliKelime.kelime;
+                document.getElementById("sonuc").classList.remove("hidden", "correct");
+                document.getElementById("sonuc").classList.add("incorrect");
+            }
+            yeniKelime();
+        }
+
+        // Oyun bitince
+        function oyunBitti() {
+            document.getElementById("sonuc").textContent = "Oyun Bitti! Skorunuz: " + skor;
+            document.getElementById("sonuc").classList.remove("hidden");
+            document.getElementById("sonuc").classList.remove("correct", "incorrect");
+        }
+    </script>
+
+</body>
+</html>
